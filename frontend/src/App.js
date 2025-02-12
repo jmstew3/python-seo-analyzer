@@ -10,10 +10,20 @@ function App() {
   });
 
   useEffect(() => {
-    fetch('/output.json')
+    // Updated fetch call using the backend endpoint
+    fetch('http://localhost:5899/analyze', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        site: 'https://www.viteyes.com',
+        sitemap: 'https://www.viteyes.com/page-sitemap.xml'
+      })
+    })
       .then(response => response.json())
       .then(jsonData => setData(jsonData))
-      .catch(error => console.error('Error fetching data:', error));
+      .catch(error => console.error('Error fetching analysis:', error));
   }, []);
 
   return (
@@ -39,7 +49,7 @@ function App() {
             {data.pages.map((page, index) => (
               <tr key={index}>
                 <td>{index + 1}</td>
-                <td>{page.content_hash}</td>
+                <td>{page.content_hash || page.error || 'N/A'}</td>
               </tr>
             ))}
           </tbody>
