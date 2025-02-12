@@ -95,3 +95,13 @@ If you get `requests.exceptions.SSLError` at either the command-line or via the 
  **instead** of..
  
  -  https://www.foo.bar
+
+# Python SEO Analyzer
+
+A tool for analyzing websites for SEO purposes.
+
+## Setup
+Use docker-compose to run the application:
+```bash
+docker-compose up --build
+```

@@ -1,0 +1,47 @@
+version: '3'
+services:
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "5899:5000"
+    volumes:
+      - ./backend:/app
+    environment:
+      - FLASK_ENV=development
+      - API_ENDPOINT=http://node-server:3998/api/seo-data
+      - PYTHONPATH=/app
+    networks:
+      - seo-network
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3587:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+      - WDS_SOCKET_PORT=0
+      - REACT_APP_API_URL=http://localhost:5984
+    stdin_open: true
+    depends_on:
+      - backend
+    networks:
+      - seo-network
+    command: >
+      sh -c "chmod -R 777 /app/node_modules && npm install && npm start"
+
+  node-server:
+    build: ./node-server
+    ports:
+      - "3998:3998"
+    networks:
+      - seo-network
+
+networks:
+  seo-network:
+    driver: bridge
